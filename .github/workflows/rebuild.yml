@@ -1,0 +1,21 @@
+name: Weekly n8n update
+
+on:
+  schedule:
+    # Every Monday at 8:00 AM UTC (2:00 AM Mexico City)
+    - cron: '0 8 * * 1'
+  workflow_dispatch: # Manual trigger
+
+jobs:
+  trigger-rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Trigger Render rebuild
+        run: |
+          date > .last-rebuild
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add .last-rebuild
+          git commit -m "chore: weekly n8n update $(date +%Y-%m-%d)"
+          git push
